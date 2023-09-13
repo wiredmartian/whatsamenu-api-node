@@ -1,6 +1,6 @@
 import { DateMetadata, Province } from "../types"
 
-type Restaurant = {
+export type RestaurantResult = {
     restaurantId: string
     name: string
     summary?: string
