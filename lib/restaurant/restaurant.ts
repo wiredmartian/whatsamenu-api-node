@@ -1,6 +1,27 @@
 import { AxiosInstance } from "axios"
-import { RestaurantResult } from "./types"
+import { Address } from "../types"
 
+/**
+ * Restaurant API response type
+ */
+export type RestaurantResult = {
+    /** unique identifier */
+    restaurantId: string
+    /** restaurant name */
+    name: string
+    /** brief summary  */
+    summary?: string
+    /**
+     * when returned from /restaurants/near-me, this field will have a value
+     *
+     * the value is the distance between current location and each restaurant returned
+     */
+    distance?: number
+    /** restaurant banner image url */
+    imageUrl: string
+    /** restaurant physical location */
+    address: Address
+}
 export interface RestaurantRepository {
     getRestaurants(): Promise<Array<RestaurantResult>>
     getRestaurant(id: string): Promise<RestaurantResult>
