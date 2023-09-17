@@ -22,9 +22,10 @@ describe("Restaurant", () => {
     })
     afterEach(() => {
         axiosMock.mockClear()
+        axiosMock.mockReset()
     })
 
-    describe("getRestaurant", () => {
+    describe("GET /restaurants/{id}", () => {
         const restaurantId = "123"
         const endpoint = `/restaurants/${restaurantId}`
         it("should make a successful request", async () => {
@@ -41,15 +42,36 @@ describe("Restaurant", () => {
             jest.spyOn(axiosMock, "get").mockImplementation(() => {
                 throw new Error("failed to complete request")
             })
-
-            try {
-                await repository.getRestaurant(restaurantId)
-            } catch {
-                /* empty */
-            }
-
+            const [actual] = await Promise.allSettled([
+                repository.getRestaurant(restaurantId)
+            ])
             expect(axiosMock.get).toHaveBeenCalledWith(endpoint)
             expect(axios.get).toThrow("failed to complete request")
+            expect(actual.status).toBe("rejected")
+        })
+    })
+
+    describe("GET /restaurants", () => {
+        const endpoint = `/restaurants`
+        it("should make a successful request", async () => {
+            jest.spyOn(axiosMock, "get").mockResolvedValue({
+                data: [data]
+            })
+            const actual = await repository.getRestaurants()
+
+            expect(actual).toEqual([data])
+            expect(axiosMock.get).toHaveBeenCalledWith(endpoint)
+        })
+
+        it("should throw error when request was rejected", async () => {
+            jest.spyOn(axiosMock, "get").mockImplementation(() => {
+                throw new Error("failed to complete request")
+            })
+            const [actual] = await Promise.allSettled([
+                repository.getRestaurants()
+            ])
+            expect(axiosMock.get).toHaveBeenCalledWith(endpoint)
+            expect(actual.status).toBe("rejected")
         })
     })
 })
