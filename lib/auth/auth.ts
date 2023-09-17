@@ -6,6 +6,7 @@ import {
     validator
 } from "../schema"
 import { AxiosInstance } from "axios"
+import { ResponseMessage } from "../types"
 
 type User = CreateUserInput
 
@@ -21,10 +22,10 @@ export class Auth {
      * @param data - create user data model
      * @returns data attribute with message
      */
-    async signUp(data: User): Promise<{ data: string }> {
+    async signUp(data: User): Promise<ResponseMessage> {
         return validator(createUserSchema, data).then(async () => {
             return this.client
-                .post<{ data: string }>("/auth/sign-up", data)
+                .post<ResponseMessage>("/auth/sign-up", data)
                 .then((response) => response.data)
         })
     }
@@ -44,9 +45,9 @@ export class Auth {
      * Generates a new API key
      * @returns the new API key
      */
-    async generateApiKey(): Promise<{ accessKey: string }> {
+    async generateApiKey(): Promise<{ apiKey: string }> {
         return this.client
-            .post<{ accessKey: string }>("/auth/api-key")
+            .post<{ apiKey: string }>("/auth/api-key")
             .then((response) => response.data)
     }
 
@@ -55,9 +56,9 @@ export class Auth {
      * @param email - email address
      * @returns an info message
      */
-    async forgotPassword(email: string): Promise<{ message: string }> {
+    async forgotPassword(email: string): Promise<ResponseMessage> {
         return this.client
-            .post<{ message: string }>("/auth/forgot-password", email)
+            .post<ResponseMessage>("/auth/forgot-password", email)
             .then((response) => response.data)
     }
 
@@ -66,12 +67,10 @@ export class Auth {
      * @param email - email address
      * @returns an info message
      */
-    async resetPassword(
-        data: ResetPasswordInput
-    ): Promise<{ message: string }> {
+    async resetPassword(data: ResetPasswordInput): Promise<ResponseMessage> {
         return validator(resetPasswordSchema, data).then(async () => {
             return this.client
-                .post<{ message: string }>("/auth/reset-password", data)
+                .post<ResponseMessage>("/auth/reset-password", data)
                 .then((response) => response.data)
         })
     }

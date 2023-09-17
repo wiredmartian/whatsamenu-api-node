@@ -12,6 +12,10 @@ export type Address = {
     longitude: number
 }
 
+export type ResponseMessage = {
+    message: string
+}
+
 /** base types */
 
 export type DateMetadata = {
