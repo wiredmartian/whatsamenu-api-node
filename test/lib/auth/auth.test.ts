@@ -7,15 +7,15 @@ import {
     jest
 } from "@jest/globals"
 import axios from "axios"
-import { User } from "../../../lib/user"
+import { Auth } from "../../../lib/auth"
 jest.mock("axios")
 
 const axiosMock = jest.mocked(axios, { shallow: true })
-let user: User
+let user: Auth
 
 describe("User", () => {
     beforeEach(() => {
-        user = new User(axiosMock)
+        user = new Auth(axiosMock)
     })
     afterEach(() => {
         axiosMock.mockClear()
@@ -36,7 +36,7 @@ describe("User", () => {
 
             let error
             try {
-                await user.createUser({
+                await user.signUp({
                     email: "hib@bob.com",
                     password: ""
                 })

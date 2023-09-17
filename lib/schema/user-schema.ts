@@ -1,7 +1,25 @@
 import { JSONSchemaType } from "ajv"
-import { CreateUser } from "../user"
 
-export const createUserSchema: JSONSchemaType<CreateUser> = {
+/**
+ * create a new user input data model
+ */
+export type CreateUserInput = {
+    email: string
+    /**
+     * min 8 letter password, at least a symbol, upper and lower case letters and a number
+     */
+    password: string
+}
+
+/**
+ * Reset password input model
+ */
+export type ResetPasswordInput = CreateUserInput & {
+    /** One-Time-PIN number */
+    otp: string
+}
+
+export const createUserSchema: JSONSchemaType<CreateUserInput> = {
     type: "object",
     properties: {
         email: {
@@ -17,4 +35,23 @@ export const createUserSchema: JSONSchemaType<CreateUser> = {
         }
     },
     required: ["email", "password"]
+}
+
+export const resetPasswordSchema: JSONSchemaType<ResetPasswordInput> = {
+    type: "object",
+    properties: {
+        email: {
+            type: "string",
+            minLength: 6
+        },
+        password: {
+            type: "string",
+            minLength: 8
+        },
+        otp: {
+            type: "string",
+            minLength: 6
+        }
+    },
+    required: ["email", "password", "otp"]
 }
