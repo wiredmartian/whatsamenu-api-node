@@ -22,13 +22,8 @@ export type RestaurantResult = {
     /** restaurant physical location */
     address: Address
 }
-export interface RestaurantRepository {
-    getRestaurants(): Promise<Array<RestaurantResult>>
-    getRestaurant(id: string): Promise<RestaurantResult>
-    search(query: string, limit: number): Promise<RestaurantResult>
-}
 
-export class Restaurant implements RestaurantRepository {
+export class Restaurant {
     private client: AxiosInstance
 
     constructor(httpClient: AxiosInstance) {
@@ -40,9 +35,12 @@ export class Restaurant implements RestaurantRepository {
      * @param query - search term
      * @param limit - max results from search to return
      */
-    async search(query: string, limit: number): Promise<RestaurantResult> {
+    async search(
+        query: string,
+        limit: number
+    ): Promise<Array<RestaurantResult>> {
         return this.client
-            .get<RestaurantResult>(
+            .get<Array<RestaurantResult>>(
                 `/restaurants/search?query=${query}&limit=${limit}`
             )
             .then((response) => response.data)
@@ -52,7 +50,7 @@ export class Restaurant implements RestaurantRepository {
      * Gets a restaurant by Id
      * @param id - restaurant Id
      */
-    async getRestaurant(id: string): Promise<RestaurantResult> {
+    async getRestaurant(id: number): Promise<RestaurantResult> {
         return this.client
             .get<RestaurantResult>(`/restaurants/${id}`)
             .then((response) => response.data)
