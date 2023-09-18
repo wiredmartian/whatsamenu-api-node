@@ -3,7 +3,7 @@ name: test
 on: 
   push:
     branches: 
-      - feature/**
+      - 'feature/**'
       - develop
       - main
 
