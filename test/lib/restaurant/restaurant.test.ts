@@ -8,11 +8,11 @@ import {
 } from "@jest/globals"
 import axios from "axios"
 import { _restaurant_test_data } from "../../__data__/_restaurant"
-import { Restaurant, RestaurantRepository } from "../../../lib/restaurant"
+import { Restaurant } from "../../../lib/restaurant"
 jest.mock("axios")
 
 const axiosMock = jest.mocked(axios, { shallow: true })
-let repository: RestaurantRepository
+let repository: Restaurant
 
 describe("Restaurant", () => {
     const data = _restaurant_test_data
@@ -26,7 +26,7 @@ describe("Restaurant", () => {
     })
 
     describe("GET /restaurants/{id}", () => {
-        const restaurantId = "123"
+        const restaurantId = 123
         const endpoint = `/restaurants/${restaurantId}`
         it("should make a successful request", async () => {
             jest.spyOn(axiosMock, "get").mockResolvedValue({
