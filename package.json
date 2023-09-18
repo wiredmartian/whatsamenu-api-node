@@ -12,7 +12,8 @@
     "test": "jest",
     "pretty": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "lint": "eslint . --ext .ts",
-    "lint-and-fix": "eslint . --ext .ts --fix"
+    "lint-and-fix": "eslint . --ext .ts --fix",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@jest/globals": "^29.6.4",
