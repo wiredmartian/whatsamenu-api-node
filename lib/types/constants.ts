@@ -1,3 +1,5 @@
+/** constants */
+
 export enum Province {
     EASTERN_CAPE = "EASTERN_CAPE",
     WESTERN_CAPE = "WESTERN_CAPE",
