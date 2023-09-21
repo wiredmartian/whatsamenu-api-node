@@ -1,3 +1,4 @@
+import { AxiosInstance } from "axios"
 import { DateMetadata } from "../types"
 
 export type IngredientResult = {
@@ -10,3 +11,11 @@ export type IngredientResult = {
     /** ingredient image url (NB: not complete url) */
     imageUrl: string
 } & DateMetadata
+
+export class Ingredient {
+    private client: AxiosInstance
+
+    constructor(httpClient: AxiosInstance) {
+        this.client = httpClient
+    }
+}
