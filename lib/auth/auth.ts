@@ -23,11 +23,11 @@ export class Auth {
      * @returns data attribute with message
      */
     async signUp(data: User): Promise<ResponseMessage> {
-        return validator(createUserSchema, data).then(async () => {
-            return this.client
+        return validator(createUserSchema, data).then(() =>
+            this.client
                 .post<ResponseMessage>("/auth/sign-up", data)
                 .then((response) => response.data)
-        })
+        )
     }
 
     /**
@@ -68,10 +68,10 @@ export class Auth {
      * @returns an info message
      */
     async resetPassword(data: ResetPasswordInput): Promise<ResponseMessage> {
-        return validator(resetPasswordSchema, data).then(async () => {
-            return this.client
+        return validator(resetPasswordSchema, data).then(() =>
+            this.client
                 .post<ResponseMessage>("/auth/reset-password", data)
                 .then((response) => response.data)
-        })
+        )
     }
 }
