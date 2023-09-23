@@ -52,15 +52,17 @@ export class Restaurant {
 
     /**
      * Updates a restaurant
+     * @param id - restaurant id
      * @param data - restaurant update input data
      * @returns response message
      */
     async updateRestaurant(
+        id: number,
         data: CreateRestaurantInput
     ): Promise<ResponseMessage> {
         return validator(createRestaurantSchema, data).then(() =>
             this.client
-                .patch<ResponseMessage>("/restaurants", data)
+                .put<ResponseMessage>(`/restaurants/${id}`, data)
                 .then((response) => response.data)
         )
     }

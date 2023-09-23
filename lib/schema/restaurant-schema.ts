@@ -24,8 +24,8 @@ export const createRestaurantSchema: JSONSchemaType<CreateRestaurantInput> = {
             type: "string",
             enum: Object.keys(Province) as readonly Province[]
         },
-        latitude: { type: "string", minLength: 10 },
-        longitude: { type: "string", minLength: 10 },
+        latitude: { type: "number" },
+        longitude: { type: "number" },
         name: { type: "string", minLength: 1 },
         summary: { type: "string", minLength: 10 }
     },
@@ -34,7 +34,6 @@ export const createRestaurantSchema: JSONSchemaType<CreateRestaurantInput> = {
         "line2",
         "city",
         "state",
-        "country",
         "latitude",
         "longitude",
         "name",
