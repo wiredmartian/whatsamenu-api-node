@@ -15,7 +15,7 @@ jest.mock("axios")
 const axiosMock = jest.mocked(axios, { shallow: true })
 let user: Auth
 
-describe("User", () => {
+describe("Auth", () => {
     beforeEach(() => {
         user = new Auth(axiosMock)
     })
@@ -65,6 +65,56 @@ describe("User", () => {
 
             expect(actual).toEqual(expected)
             expect(axiosMock.post).toHaveBeenCalledWith("/auth/sign-up", input)
+        })
+    })
+
+    describe("POST /auth/sign-in", () => {
+        it("should successfully log user in", async () => {
+            const input: CreateUserInput = {
+                email: "hib@bob.com",
+                password: "@Password01"
+            }
+            jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
+                data: { token: "ey..." }
+            })
+
+            const actual = await user.signIn(input)
+
+            expect(actual).toEqual({ token: "ey..." })
+            expect(axiosMock.post).toHaveBeenCalledWith("/auth/sign-in", input)
+        })
+    })
+
+    describe("POST /auth/api-key", () => {
+        it("should successfully generate an api key", async () => {
+            jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
+                data: { apiKey: "WM.ahxnoqwue28" }
+            })
+
+            const actual = await user.generateApiKey()
+
+            expect(actual).toEqual({ apiKey: "WM.ahxnoqwue28" })
+            expect(axiosMock.post).toHaveBeenCalledWith("/auth/api-key")
+        })
+    })
+
+    describe("POST /auth/forgot-password", () => {
+        it("should successfully send a forgot password request", async () => {
+            const input = "bob@gmail.com"
+            const expected: ResponseMessage = {
+                message: "A One Time Pin has been sent to your email"
+            }
+            jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
+                data: { message: "A One Time Pin has been sent to your email" }
+            })
+
+            const actual = await user.forgotPassword(input)
+
+            expect(actual).toEqual(expected)
+            expect(axiosMock.post).toHaveBeenCalledWith(
+                "/auth/forgot-password",
+                input
+            )
         })
     })
 })
