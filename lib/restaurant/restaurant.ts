@@ -43,11 +43,13 @@ export class Restaurant {
     async createRestaurant(
         data: CreateRestaurantInput
     ): Promise<ResponseMessage> {
-        return validator(createRestaurantSchema, data).then(() =>
-            this.client
-                .post<ResponseMessage>("/restaurants", data)
-                .then((response) => response.data)
-        )
+        return validator
+            .validateJsonSchema(createRestaurantSchema, data)
+            .then(() =>
+                this.client
+                    .post<ResponseMessage>("/restaurants", data)
+                    .then((response) => response.data)
+            )
     }
 
     /**
@@ -60,11 +62,13 @@ export class Restaurant {
         id: number,
         data: CreateRestaurantInput
     ): Promise<ResponseMessage> {
-        return validator(createRestaurantSchema, data).then(() =>
-            this.client
-                .put<ResponseMessage>(`/restaurants/${id}`, data)
-                .then((response) => response.data)
-        )
+        return validator
+            .validateJsonSchema(createRestaurantSchema, data)
+            .then(() =>
+                this.client
+                    .put<ResponseMessage>(`/restaurants/${id}`, data)
+                    .then((response) => response.data)
+            )
     }
 
     /**
