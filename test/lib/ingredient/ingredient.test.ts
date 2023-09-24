@@ -14,7 +14,7 @@ jest.mock("axios")
 const axiosMock = jest.mocked(axios, { shallow: true })
 let ingredient: Ingredient
 
-describe("User", () => {
+describe("Ingredients", () => {
     beforeEach(() => {
         ingredient = new Ingredient(axiosMock)
     })
@@ -41,16 +41,6 @@ describe("User", () => {
             name: "Cheese",
             menuItemId: 1234
         }
-        it("should update ingredient successfully", async () => {
-            jest.spyOn(axiosMock, "put").mockResolvedValue({
-                data: { message: "ingredient updated" }
-            })
-            const actual = await ingredient.update(21, validInput)
-
-            expect(actual).toEqual({ message: "ingredient updated" })
-            expect(axiosMock.put).toHaveBeenCalledWith(endpoint, validInput)
-        })
-
         it("should return validation errors", async () => {
             // Arrange
             const invalidInput: CreateIngredientInput = {
@@ -78,6 +68,15 @@ describe("User", () => {
             // Assert
             expect(axiosMock.put).not.toHaveBeenCalled()
             expect(errorResult).toEqual(expected)
+        })
+        it("should update ingredient successfully", async () => {
+            jest.spyOn(axiosMock, "put").mockResolvedValue({
+                data: { message: "ingredient updated" }
+            })
+            const actual = await ingredient.update(21, validInput)
+
+            expect(actual).toEqual({ message: "ingredient updated" })
+            expect(axiosMock.put).toHaveBeenCalledWith(endpoint, validInput)
         })
     })
 })
