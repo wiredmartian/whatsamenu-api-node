@@ -38,7 +38,7 @@ export class Ingredient {
             .validateJsonSchema(createIngredientSchema, data)
             .then(() =>
                 this.client
-                    .put<ResponseMessage>(`/ingredients/${id}`)
+                    .put<ResponseMessage>(`/ingredients/${id}`, data)
                     .then((response) => response.data)
             )
     }
