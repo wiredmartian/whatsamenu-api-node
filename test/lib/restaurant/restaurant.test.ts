@@ -111,7 +111,7 @@ describe("Restaurant", () => {
             // Act
             let errorResult
             try {
-                await repository.createRestaurant(invalidInput)
+                await repository.create(invalidInput)
             } catch (err) {
                 errorResult = err
             }
@@ -133,7 +133,7 @@ describe("Restaurant", () => {
             })
 
             // Act
-            const actual = await repository.createRestaurant(validInput)
+            const actual = await repository.create(validInput)
 
             // Assert
             expect(axiosMock.post).toHaveBeenCalledWith(endpoint, validInput)
@@ -183,7 +183,7 @@ describe("Restaurant", () => {
             // Act
             let errorResult
             try {
-                await repository.updateRestaurant(15, invalidInput)
+                await repository.update(15, invalidInput)
             } catch (err) {
                 errorResult = err
             }
@@ -205,7 +205,7 @@ describe("Restaurant", () => {
             })
 
             // Act
-            const actual = await repository.updateRestaurant(15, validInput)
+            const actual = await repository.update(15, validInput)
 
             // Assert
             expect(axiosMock.put).toHaveBeenCalledWith(endpoint, validInput)

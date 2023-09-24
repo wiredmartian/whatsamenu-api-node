@@ -40,9 +40,7 @@ export class Restaurant {
      * @param data - restaurant creation input data
      * @returns response message
      */
-    async createRestaurant(
-        data: CreateRestaurantInput
-    ): Promise<ResponseMessage> {
+    async create(data: CreateRestaurantInput): Promise<ResponseMessage> {
         return validator
             .validateJsonSchema(createRestaurantSchema, data)
             .then(() =>
@@ -58,7 +56,7 @@ export class Restaurant {
      * @param data - restaurant update input data
      * @returns response message
      */
-    async updateRestaurant(
+    async update(
         id: number,
         data: CreateRestaurantInput
     ): Promise<ResponseMessage> {

@@ -8,6 +8,8 @@ import {
 } from "@jest/globals"
 import axios from "axios"
 import { Auth } from "../../../lib/auth"
+import { CreateUserInput } from "../../../lib/schema"
+import { ResponseMessage } from "../../../lib/types"
 jest.mock("axios")
 
 const axiosMock = jest.mocked(axios, { shallow: true })
@@ -46,6 +48,23 @@ describe("User", () => {
 
             expect(error).toEqual(expected)
             expect(axiosMock.post).not.toHaveBeenCalled()
+        })
+
+        it("should sign up successfully", async () => {
+            const input: CreateUserInput = {
+                email: "hib@bob.com",
+                password: "@Password01"
+            }
+            const expected: ResponseMessage = { message: "user created" }
+
+            jest.spyOn(axiosMock, "post").mockResolvedValue({
+                data: { message: "user created" }
+            })
+
+            const actual = await user.signUp(input)
+
+            expect(actual).toEqual(expected)
+            expect(axiosMock.post).toHaveBeenCalledWith("/auth/sign-up", input)
         })
     })
 })
