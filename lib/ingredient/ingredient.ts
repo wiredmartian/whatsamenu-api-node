@@ -5,6 +5,7 @@ import {
     createIngredientSchema,
     validator
 } from "../schema"
+import FD from "form-data"
 
 export type IngredientResult = {
     /** ingredient id */
@@ -70,6 +71,16 @@ export class Ingredient {
 
         const form = new FormData()
         form.append("fileData", data.get("fileData") as FormDataEntryValue)
+
+        return this.client
+            .putForm<{ data: string }>(`/ingredients/${id}/upload`, form)
+            .then((response) => response.data)
+    }
+
+    async uploadBuffer(id: number, buff: Buffer) {
+        await validator.validateImageBuffer(buff)
+        const form = new FD()
+        form.append("fileData", buff)
 
         return this.client
             .putForm<{ data: string }>(`/ingredients/${id}/upload`, form)

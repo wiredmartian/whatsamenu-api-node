@@ -14,7 +14,7 @@ export type CreateRestaurantInput = {
 }
 export const createRestaurantSchema: JSONSchemaType<CreateRestaurantInput> = {
     type: "object",
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         line1: { type: "string", minLength: 1 },
         line2: { type: "string" },

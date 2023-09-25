@@ -7,7 +7,7 @@ export type CreateIngredientInput = {
 
 export const createIngredientSchema: JSONSchemaType<CreateIngredientInput> = {
     type: "object",
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         name: { type: "string", minLength: 1 },
         menuItemId: { type: "integer", minimum: 1 }
