@@ -3,7 +3,7 @@ import { Province } from "../types"
 
 export type CreateRestaurantInput = {
     line1: string
-    line2: string
+    line2?: string
     city: string
     state: Province
     country: string
@@ -17,7 +17,7 @@ export const createRestaurantSchema: JSONSchemaType<CreateRestaurantInput> = {
     additionalProperties: true,
     properties: {
         line1: { type: "string", minLength: 1 },
-        line2: { type: "string" },
+        line2: { type: "string", nullable: true },
         city: { type: "string", minLength: 1 },
         country: { type: "string" },
         state: {
@@ -31,7 +31,6 @@ export const createRestaurantSchema: JSONSchemaType<CreateRestaurantInput> = {
     },
     required: [
         "line1",
-        "line2",
         "city",
         "state",
         "latitude",
