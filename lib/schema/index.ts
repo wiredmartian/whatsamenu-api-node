@@ -1,4 +1,6 @@
 export * from "./user-schema"
 export * from "./restaurant-schema"
 export * from "./ingredient-schema"
+export * from "./menu-group-schema"
+export * from "./menu-schema"
 export * from "./validator"
