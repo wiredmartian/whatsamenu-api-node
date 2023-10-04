@@ -1,10 +1,10 @@
 {
-  "name": "whatsamenu-api-node",
+  "name": "@wiredmartian/whatsamenu-node",
   "version": "0.0.1",
   "description": "Whatsamenu Nodejs API Client",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "repository": "git@github.com:wired-martians/whatsamenu-api-node.git",
+  "repository": "git@github.com:wiredmartian/whatsamenu-api-node.git",
   "author": "wiredmartian <solomzi.jikani@gmail.com>",
   "license": "MIT",
   "scripts": {

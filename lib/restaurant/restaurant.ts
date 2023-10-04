@@ -1,5 +1,10 @@
 import { AxiosInstance } from "axios"
-import { Address } from "../types"
+import { Address, ResponseMessage } from "../types"
+import {
+    CreateRestaurantInput,
+    createRestaurantSchema,
+    validator
+} from "../schema"
 
 /**
  * Restaurant API response type
@@ -31,18 +36,46 @@ export class Restaurant {
     }
 
     /**
-     *
-     * @param query - search term
-     * @param limit - max results from search to return
+     * Creates a new restaurant
+     * @param data - restaurant creation input data
+     * @returns response message
      */
-    async search(
-        query: string,
-        limit: number
-    ): Promise<Array<RestaurantResult>> {
-        return this.client
-            .get<Array<RestaurantResult>>(
-                `/restaurants/search?query=${query}&limit=${limit}`
+    async create(data: CreateRestaurantInput): Promise<ResponseMessage> {
+        return validator
+            .validateJsonSchema(createRestaurantSchema, data)
+            .then(() =>
+                this.client
+                    .post<ResponseMessage>("/restaurants", data)
+                    .then((response) => response.data)
             )
+    }
+
+    /**
+     * Updates a restaurant
+     * @param id - restaurant id
+     * @param data - restaurant update input data
+     * @returns response message
+     */
+    async update(
+        id: number,
+        data: CreateRestaurantInput
+    ): Promise<ResponseMessage> {
+        return validator
+            .validateJsonSchema(createRestaurantSchema, data)
+            .then(() =>
+                this.client
+                    .put<ResponseMessage>(`/restaurants/${id}`, data)
+                    .then((response) => response.data)
+            )
+    }
+
+    /**
+     * Gets a list of restaurants
+     * @returns list of restaurants
+     */
+    async getRestaurants(): Promise<Array<RestaurantResult>> {
+        return this.client
+            .get<Array<RestaurantResult>>(`/restaurants`)
             .then((response) => response.data)
     }
 
@@ -57,12 +90,18 @@ export class Restaurant {
     }
 
     /**
-     * Gets a list of restaurants
-     * @returns list of restaurants
+     * Search restaurants by name
+     * @param query - search term
+     * @param limit - max results from search to return
      */
-    async getRestaurants(): Promise<Array<RestaurantResult>> {
+    async search(
+        query: string,
+        limit: number
+    ): Promise<Array<RestaurantResult>> {
         return this.client
-            .get<Array<RestaurantResult>>(`/restaurants`)
+            .get<Array<RestaurantResult>>(
+                `/restaurants/search?query=${query}&limit=${limit}`
+            )
             .then((response) => response.data)
     }
 }

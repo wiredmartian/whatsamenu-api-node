@@ -19,5 +19,5 @@ export type MenuItemResult = {
     /** menu item cost price */
     price: string
     /** ingredients used to make the item */
-    ingredients: Array<IngredientResult>
+    ingredients: Array<IngredientResult> | null
 } & DateMetadata
