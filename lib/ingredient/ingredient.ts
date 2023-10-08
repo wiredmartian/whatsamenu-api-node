@@ -78,9 +78,9 @@ export class Ingredient {
     }
 
     async uploadBuffer(id: number, buff: Buffer) {
-        await validator.validateImageBuffer(buff)
+        // await validator.validateImageBuffer(buff)
         const form = new FD()
-        form.append("fileData", buff)
+        form.append("fileData", buff, { filename: "file.png" })
 
         return this.client
             .putForm<{ data: string }>(`/ingredients/${id}/upload`, form)
