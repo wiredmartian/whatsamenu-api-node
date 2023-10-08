@@ -12,6 +12,11 @@ import {
 export type RestaurantResult = {
     /** unique identifier */
     restaurantId: string
+    /**
+     * restaurant alias is an id alias unique to each restaurant
+     * @example dukkah-florida
+     * */
+    alias: string | null
     /** restaurant name */
     name: string
     /** brief summary  */
