@@ -146,12 +146,19 @@ export class Restaurant {
         const coordinates = `${query.latitude},${query.longitude}`
         const rgxExpression =
             /^((-?|\+?)?\d+(\.\d+)?),\s*((-?|\+?)?\d+(\.\d+)?)$/gi
-        if (rgxExpression.test(coordinates)) {
+        if (!rgxExpression.test(coordinates)) {
             throw new Error("invalid GPS coordinates")
         }
 
+        const lat = parseInt(query.latitude.toString(), 10)
+        const lon = parseInt(query.longitude.toString(), 10)
+
+        if (lat > 90 || lat < -90 || lon > 90 || lon < -90) {
+            throw new Error("GPS coordinates out of range")
+        }
+
         return this.client
-            .post<RestaurantResult[]>(`/restaurants/near-me`)
+            .post<RestaurantResult[]>(`/restaurants/near-me`, query)
             .then((response) => response.data)
     }
 

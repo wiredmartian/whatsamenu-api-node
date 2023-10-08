@@ -212,4 +212,56 @@ describe("Restaurant", () => {
             expect(actual).toEqual(expected)
         })
     })
+
+    describe("POST /restaurants/near-me", () => {
+        const endpoint = "/restaurants/near-me"
+
+        it("should throw a validation error when coordinates are out of range", async () => {
+            let error: Error | null = null
+            try {
+                const input = {
+                    latitude: -100.182737,
+                    longitude: 19.1928373,
+                    radius: 10
+                }
+                await repository.getNearMe(input)
+            } catch (err) {
+                error = err as unknown as Error
+            }
+
+            expect(error?.message).toBe("GPS coordinates out of range")
+        })
+
+        it("should throw a validation error when coordinates are invalid", async () => {
+            let error: Error | null = null
+            try {
+                const input = {
+                    latitude: "hello",
+                    longitude: 19.1928373,
+                    radius: 10
+                }
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                await repository.getNearMe(input as any)
+            } catch (err) {
+                error = err as unknown as Error
+            }
+
+            expect(error?.message).toBe("invalid GPS coordinates")
+        })
+
+        it("should execute request successfully and return a result", async () => {
+            jest.spyOn(axiosMock, "post").mockResolvedValue({
+                data: [data]
+            })
+            const input = {
+                latitude: -32.182737,
+                longitude: 19.1928373,
+                radius: 10
+            }
+            const actual = await repository.getNearMe(input)
+
+            expect(actual).toEqual([data])
+            expect(axiosMock.post).toHaveBeenCalledWith(endpoint, input)
+        })
+    })
 })
