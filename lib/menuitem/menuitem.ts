@@ -1,9 +1,9 @@
 import { AxiosInstance } from "axios"
 import { IngredientResult } from "../ingredient"
 import { DateMetadata, ResponseMessage } from "../types"
-import { createMenuItemSchema, validator } from "../schema"
-import { CreateMenuItemInput } from "../schema/menu-item-schema"
+import { CreateMenuItemInput, createMenuItemSchema, validator } from "../schema"
 import { AllergenResult } from "../allergen"
+import FD from "form-data"
 
 export type MenuItemResult = {
     /** menu item id */
@@ -112,6 +112,21 @@ export class MenuItem {
             .delete<ResponseMessage>(
                 `/menu-item/${menuItemId}/allergens/${allergenId}`
             )
+            .then((response) => response.data)
+    }
+
+    /**
+     * Uploads a menu item display image
+     * @param id - menu item id
+     * @param buff - display image buffer
+     * @returns an image path
+     */
+    async uploadImage(id: number, buff: Buffer) {
+        const form = new FD()
+        form.append("fileData", buff, { filename: "file.png" })
+
+        return this.client
+            .putForm<{ data: string }>(`menu-item/${id}/upload`, form)
             .then((response) => response.data)
     }
 }
