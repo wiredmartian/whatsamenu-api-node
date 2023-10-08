@@ -5,7 +5,7 @@ import {
     createIngredientSchema,
     validator
 } from "../schema"
-import FD from "form-data"
+import { FormData } from "formdata-node"
 
 export type IngredientResult = {
     /** ingredient id */
@@ -58,29 +58,14 @@ export class Ingredient {
     /**
      * Uploads an ingredient image
      * @param id - ingredient id
-     * @param data - FormData containing image file
+     * @param image - Image file
      * @returns upload file path/url
      */
-    async upload(id: number, data: FormData) {
-        if (!data.get("fileData") === null) {
-            throw new Error("form-data contains no required file data")
-        }
-        await validator.validateFormFile(
-            data.get("fileData") as FormDataEntryValue
-        )
-
+    async upload(id: number, image: File) {
         const form = new FormData()
-        form.append("fileData", data.get("fileData") as FormDataEntryValue)
+        await validator.validateFormFile(image)
 
-        return this.client
-            .putForm<{ data: string }>(`/ingredients/${id}/upload`, form)
-            .then((response) => response.data)
-    }
-
-    async uploadBuffer(id: number, buff: Buffer) {
-        // await validator.validateImageBuffer(buff)
-        const form = new FD()
-        form.append("fileData", buff, { filename: "file.png" })
+        form.append("fileData", image)
 
         return this.client
             .putForm<{ data: string }>(`/ingredients/${id}/upload`, form)

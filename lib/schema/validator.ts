@@ -1,7 +1,6 @@
 import Ajv from "ajv"
-import { extname } from "path"
 
-const MB = Math.pow(2, 1024)
+const MB = Math.pow(1024, 2)
 
 const validate = <T>(schema: Record<string, string>, data: T) => {
     const validator = new Ajv({ allErrors: true }).compile(schema)
@@ -14,17 +13,9 @@ const validate = <T>(schema: Record<string, string>, data: T) => {
     })
 }
 
-const formFileValid = (fieldValue: FormDataEntryValue) => {
-    if (typeof fieldValue === "string") {
-        return Promise.reject(Error("expected a File but received string"))
-    }
-    const file = fieldValue as File
-
-    if (
-        !["image/png", "image/jpeg", "image/jpg"].includes(file.type) ||
-        !["png", "jpeg", "jpg"].includes(extname(file.name))
-    ) {
-        return Promise.reject(Error("invalid file type"))
+const formFileValid = (file: Blob) => {
+    if (!["image/png", "image/jpeg", "image/jpg"].includes(file.type)) {
+        return Promise.reject(Error("invalid image mime-type"))
     }
 
     if (file.size > 1 * MB) {
