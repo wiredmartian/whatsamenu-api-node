@@ -5,6 +5,7 @@ import {
     createRestaurantSchema,
     validator
 } from "../schema"
+import { MenuResult } from "../menu"
 
 /**
  * Restaurant API response type
@@ -75,6 +76,16 @@ export class Restaurant {
     }
 
     /**
+     * Marks a restaurant and all it's dependents for deletion
+     * @param id - restaurant id or alias
+     */
+    async delete(id: string): Promise<ResponseMessage> {
+        return this.client
+            .delete<ResponseMessage>(`/restaurants/${id}`)
+            .then((response) => response.data)
+    }
+
+    /**
      * Gets a list of restaurants
      * @returns list of restaurants
      */
@@ -95,6 +106,17 @@ export class Restaurant {
     }
 
     /**
+     * Gets a restaurant QR Code
+     * @param id - restaurant id
+     * @returns a base64 qr code
+     */
+    async getQRCode(id: number): Promise<{ imageUri: string }> {
+        return this.client
+            .get<{ imageUri: string }>(`restaurants/${id}/qrcode`)
+            .then((response) => response.data)
+    }
+
+    /**
      * Search restaurants by name
      * @param query - search term
      * @param limit - max results from search to return
@@ -108,5 +130,50 @@ export class Restaurant {
                 `/restaurants/search?query=${query}&limit=${limit}`
             )
             .then((response) => response.data)
+    }
+    /**
+     * FIXME: should this be a post?
+     * Gets a list of restaurant near specified coordinates
+     * Radius (km) specifies the distance
+     * @param query - input data for the query
+     * @returns list of restaurants near
+     */
+    async getNearMe(query: {
+        latitude: number
+        longitude: number
+        radius: number
+    }): Promise<RestaurantResult[]> {
+        const coordinates = `${query.latitude},${query.longitude}`
+        const rgxExpression =
+            /^((-?|\+?)?\d+(\.\d+)?),\s*((-?|\+?)?\d+(\.\d+)?)$/gi
+        if (rgxExpression.test(coordinates)) {
+            throw new Error("invalid GPS coordinates")
+        }
+
+        return this.client
+            .post<RestaurantResult[]>(`/restaurants/near-me`)
+            .then((response) => response.data)
+    }
+
+    /**
+     * Gets restaurants by owner
+     * Owner is determined by token/api passed to the request headers
+     * @returns list of restaurants
+     */
+    async getByOwner(): Promise<RestaurantResult[]> {
+        return this.client
+            .get<RestaurantResult[]>("restaurants/owner")
+            .then((response) => response.data)
+    }
+
+    /**
+     * Gets a list of restaurant menus
+     * @param id - restaurant or alias
+     */
+    // TODO: support for alias
+    async getMenus(id: string): Promise<MenuResult[]> {
+        return this.client
+            .get<MenuResult[]>(`/restaurants/${id}/menus`)
+            .then((res) => res.data)
     }
 }
