@@ -21,6 +21,7 @@ export type ResetPasswordInput = CreateUserInput & {
 
 export const createUserSchema: JSONSchemaType<CreateUserInput> = {
     type: "object",
+    additionalProperties: true,
     properties: {
         email: {
             type: "string",
