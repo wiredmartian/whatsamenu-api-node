@@ -7,8 +7,9 @@ import {
     jest
 } from "@jest/globals"
 import axios from "axios"
+import fs from "fs"
 import { Ingredient } from "../../../lib/ingredient"
-import { CreateIngredientInput } from "../../../lib/schema"
+import { CreateIngredientInput, validator } from "../../../lib/schema"
 jest.mock("axios")
 
 const axiosMock = jest.mocked(axios, { shallow: true })
@@ -77,6 +78,28 @@ describe("Ingredients", () => {
 
             expect(actual).toEqual({ message: "ingredient updated" })
             expect(axiosMock.put).toHaveBeenCalledWith(endpoint, validInput)
+        })
+    })
+
+    describe("PUT /ingredients/{id}/upload", () => {
+        const imagePath = "__test__/__assets__/kota.jpeg"
+        const buffer = fs.readFileSync(imagePath)
+        it("should successfully upload an image", async () => {
+            jest.spyOn(validator, "validateFormFile").mockResolvedValue()
+            jest.spyOn(axiosMock, "putForm").mockResolvedValue({
+                data: {
+                    data: "public/ingredients/12-b2a7f1c6be9edf1ac591c123b6ed2f90.jpg"
+                }
+            })
+
+            const actual = await ingredient.upload(
+                12,
+                new Blob([buffer], { type: "image/jpeg" })
+            )
+
+            expect(actual).toEqual({
+                data: "public/ingredients/12-b2a7f1c6be9edf1ac591c123b6ed2f90.jpg"
+            })
         })
     })
 })

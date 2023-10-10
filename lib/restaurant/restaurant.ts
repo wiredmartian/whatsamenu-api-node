@@ -183,4 +183,13 @@ export class Restaurant {
             .get<MenuResult[]>(`/restaurants/${id}/menus`)
             .then((res) => res.data)
     }
+
+    async upload(id: number, image: Blob) {
+        const form = new FormData()
+        await validator.validateFormFile(image)
+        form.append("fileData", image)
+        return this.client
+            .putForm<{ data: string }>(`/restaurants/${id}/upload`, form)
+            .then((response) => response.data)
+    }
 }

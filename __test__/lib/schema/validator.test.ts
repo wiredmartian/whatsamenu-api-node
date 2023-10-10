@@ -1,11 +1,11 @@
 import { describe, it, expect } from "@jest/globals"
-import { join } from "path"
 import fs from "fs"
 import { validator } from "../../../lib/schema"
 
-describe("uploadBuffer", () => {
+describe("validateFormFile", () => {
     it("should resolve promise when the image is valid", async () => {
-        const buffer = fs.readFileSync(join(__dirname, "kota.jpeg"))
+        const imagePath = "__test__/__assets__/kota.jpeg"
+        const buffer = fs.readFileSync(imagePath)
         const file = createFile(buffer, "image/jpeg")
         expect(validator.validateFormFile(file)).resolves.not.toThrow()
     })
