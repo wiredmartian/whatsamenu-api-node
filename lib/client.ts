@@ -11,7 +11,7 @@ export type Credentials = Partial<{
     apiKey: string
 }>
 
-export class Client {
+export class DefaultAxiosClient {
     createClient(
         clientConfig: AxiosRequestConfig,
         { apiKey, token }: Credentials

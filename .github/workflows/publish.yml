@@ -1,0 +1,38 @@
+name: test
+
+on: 
+  push:
+    branches: 
+      - [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    # Setup .npmrc file to publish to npm
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: install dependencies
+      run: yarn install
+
+    - name: linting
+      run: yarn lint
+
+    - name: type checking
+      run: yarn typecheck
+
+    - name: testing
+      run: yarn test
+    
+    - name: build
+      run: yarn build
+
+    - name: publish
+      run: npm publish
+      env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

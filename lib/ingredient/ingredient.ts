@@ -61,12 +61,10 @@ export class Ingredient {
      * @param image - Image file
      * @returns upload file path/url
      */
-    async upload(id: number, image: File) {
+    async upload(id: number, image: Blob) {
         const form = new FormData()
         await validator.validateFormFile(image)
-
         form.append("fileData", image)
-
         return this.client
             .putForm<{ data: string }>(`/ingredients/${id}/upload`, form)
             .then((response) => response.data)
