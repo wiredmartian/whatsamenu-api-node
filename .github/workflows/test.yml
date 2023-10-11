@@ -1,12 +1,10 @@
 name: test
 
 on: 
-  push:
   pull_request:
     branches: 
-      - 'feature/**'
-      - [develop]
-      - [main]
+      - develop
+      - main
 
 jobs:
   test:
