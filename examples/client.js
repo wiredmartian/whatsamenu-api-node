@@ -1,11 +1,10 @@
 const axios = require("axios")
 
 const $httpClient = axios.create({
-    baseURL: "https://whatsamenu.core.wiredmartians.com/v1",
+    baseURL: "http://127.0.0.1:9200/v1",
     timeout: 25000,
     headers: {
-        "X-Auth-Token": "WM.",
-        Authorization: "Bearer ey..."
+        "X-API-Key": process.env.API_KEY,
     }
 })
 
