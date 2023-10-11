@@ -1,3 +1,2 @@
-export * from "./restaurant"
-export * from "./allergen"
-export * from "./ingredient"
+export * from "./whatsamenu"
+export * from "./client"

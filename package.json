@@ -4,6 +4,7 @@
   "description": "Whatsamenu Nodejs API Client",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": ["dist"],
   "repository": "git@github.com:wiredmartian/whatsamenu-api-node.git",
   "author": "wiredmartian <solomzi.jikani@gmail.com>",
   "license": "MIT",
