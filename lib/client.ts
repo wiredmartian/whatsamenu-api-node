@@ -11,13 +11,11 @@ export type Credentials = {
  * Default http client using axios
  */
 export class DefaultMenuHttpClient {
-    static create(
-        clientConfig: AxiosRequestConfig,
-        { apiKey }: Credentials
-    ): AxiosInstance {
-        const client = axios.create()
+    static create(clientConfig: AxiosRequestConfig): AxiosInstance {
+        const client = axios.create(clientConfig)
         client.defaults.baseURL = clientConfig.baseURL
-        if (!apiKey || !apiKey.startsWith("WM.")) {
+        const apiKey = client.defaults.headers["X-API-Key"]
+        if (!apiKey || !apiKey.toString().startsWith("WM.")) {
             throw new Error(`unexpected API Key token received: ${apiKey}`)
         }
         client.defaults.headers["X-API-Key"] = apiKey
