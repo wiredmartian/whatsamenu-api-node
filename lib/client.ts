@@ -1,33 +1,30 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios"
 
-export type Credentials = Partial<{
-    /**
-     * Bearer token used in the Authorization header
-     */
-    token: string
+export type Credentials = {
     /**
      * X-API-Key used in the headers
      */
     apiKey: string
-}>
+}
 
-export class DefaultAxiosClient {
-    createClient(
+/**
+ * Default http client using axios
+ */
+export class DefaultMenuHttpClient {
+    static create(
         clientConfig: AxiosRequestConfig,
-        { apiKey, token }: Credentials
+        { apiKey }: Credentials
     ): AxiosInstance {
         const client = axios.create()
         client.defaults.baseURL = clientConfig.baseURL
-        if (apiKey) {
-            client.defaults.headers["X-API-Key"] = apiKey
+        if (!apiKey || !apiKey.startsWith("WM.")) {
+            throw new Error(`unexpected API Key token received: ${apiKey}`)
         }
-        if (token) {
-            client.defaults.headers.common.Authorization = `Bearer ${token}`
-        }
+        client.defaults.headers["X-API-Key"] = apiKey
         return this.attachDefaultErrorHandler(client)
     }
 
-    private attachDefaultErrorHandler(client: AxiosInstance) {
+    private static attachDefaultErrorHandler(client: AxiosInstance) {
         client.interceptors.response.use(
             (response) => response.data,
             (error) => {
