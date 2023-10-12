@@ -6,6 +6,7 @@ import {
     validator
 } from "../schema"
 import { MenuResult } from "../menu"
+import { FormData } from "formdata-node"
 
 /**
  * Restaurant API response type
