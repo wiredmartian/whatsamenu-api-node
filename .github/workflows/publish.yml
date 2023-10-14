@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  publish:
+  build_publish:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,7 +31,22 @@ jobs:
     
     - name: build
       run: yarn build
-
+    #### TAG RELEASE ####
+    - name: "Push tag v${{ steps.package-version.outputs.current-version }}"
+      uses: rickstaa/action-create-tag@v1
+      id: tag_version
+      with:
+        tag: "v${{ steps.package-version.outputs.current-version }}"
+    #### GITHUB RELEASE ####
+    - name: "Create a GitHub release v${{ steps.package-version.outputs.current-version }}"
+      uses: ncipollo/release-action@v1
+      with:
+        tag: "v${{ steps.package-version.outputs.current-version }}"
+        name: "Release v${{ steps.package-version.outputs.current-version }}"
+        body: |
+          ## Release notes:
+          ${{ steps.extract-release-notes.outputs.release_notes }}
+    #### NPM RELEASE ####
     - name: publish
       run: npm publish --access public
       env:
