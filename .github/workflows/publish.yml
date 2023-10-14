@@ -31,12 +31,22 @@ jobs:
     
     - name: build
       run: yarn build
+
+    - name: get-npm-version
+      id: package-version
+      uses: martinbeentjes/npm-get-version-action@main
+
+    - name: Extract release notes
+      id: extract-release-notes
+      uses: ffurrer2/extract-release-notes@v1
+
     #### TAG RELEASE ####
     - name: "Push tag v${{ steps.package-version.outputs.current-version }}"
       uses: rickstaa/action-create-tag@v1
       id: tag_version
       with:
         tag: "v${{ steps.package-version.outputs.current-version }}"
+
     #### GITHUB RELEASE ####
     - name: "Create a GitHub release v${{ steps.package-version.outputs.current-version }}"
       uses: ncipollo/release-action@v1
@@ -46,6 +56,7 @@ jobs:
         body: |
           ## Release notes:
           ${{ steps.extract-release-notes.outputs.release_notes }}
+          
     #### NPM RELEASE ####
     - name: publish
       run: npm publish --access public

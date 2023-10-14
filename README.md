@@ -2,6 +2,9 @@
 A Node client for WhatsAMenu API (https://github.com/wiredmartian/whatsamenu-api-documentation)
 
 
+#### Status
+[![publish](https://github.com/wiredmartian/whatsamenu-api-node/actions/workflows/publish.yml/badge.svg?branch=main)](https://github.com/wiredmartian/whatsamenu-api-node/actions/workflows/publish.yml)
+
 ### Installation
 
 Using npm:
