@@ -8,9 +8,9 @@ import {
 } from "@jest/globals"
 import axios from "axios"
 import { _restaurant_test_data } from "../../__data__/_restaurant"
-import { Restaurant } from "../../../lib/restaurant"
-import { CreateRestaurantInput } from "../../../lib/schema"
-import { Province, ResponseMessage } from "../../../lib/types"
+import { Restaurant } from "../../../src/restaurant"
+import { CreateRestaurantInput } from "../../../src/schema"
+import { Province, ResponseMessage } from "../../../src/types"
 jest.mock("axios")
 
 const axiosMock = jest.mocked(axios, { shallow: true })

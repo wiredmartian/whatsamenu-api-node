@@ -7,9 +7,9 @@ import {
     jest
 } from "@jest/globals"
 import axios from "axios"
-import { Auth } from "../../../lib/auth"
-import { CreateUserInput } from "../../../lib/schema"
-import { ResponseMessage } from "../../../lib/types"
+import { Auth } from "../../../src/auth"
+import { CreateUserInput } from "../../../src/schema"
+import { ResponseMessage } from "../../../src/types"
 jest.mock("axios")
 
 const axiosMock = jest.mocked(axios, { shallow: true })

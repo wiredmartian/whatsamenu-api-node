@@ -2,6 +2,9 @@
 A Node client for WhatsAMenu API (https://github.com/wiredmartian/whatsamenu-api-documentation)
 
 
+#### Status
+[![publish](https://github.com/wiredmartian/whatsamenu-api-node/actions/workflows/publish.yml/badge.svg?branch=main)](https://github.com/wiredmartian/whatsamenu-api-node/actions/workflows/publish.yml)
+
 ### Installation
 
 Using npm:
@@ -18,6 +21,8 @@ $ yarn add @wiredmartians/whatsamenu-node
 
 
 ### Example
+
+This package will work for both ECMAScript (ESM) and CommonJS. You should be able to `import` and/or `require` it.
 
 ##### .env
 ``` .env
@@ -73,6 +78,32 @@ const restaurant = new Restaurant(client)
 restaurant
     .getRestaurants()
     .then((res) => console.log(res))
+    .catch((err) => console.error(err))
+
+```
+
+### TypeScript usage
+
+``` ts
+import { AxiosInstance } from "axios"
+import { DefaultMenuHttpClient, MenuAPI } from "@wiredmartians/whatsamenu-node"
+import { Restaurant, RestaurantResult } from "@wiredmartians/whatsamenu-node/restaurant"
+
+const apiKey = process.env.API_KEY
+const baseURL =  process.env.API_BASE_URL
+const client: AxiosInstance = DefaultMenuHttpClient.create({
+    baseURL,
+    headers: {
+        "X-API-Key": apiKey
+    }
+})
+
+const { menuApi } = new MenuAPI(client)
+
+const restaurant: Restaurant = menuApi.restaurant
+
+restaurant.getRestaurants()
+    .then((res: RestaurantResult[]) => console.log(res))
     .catch((err) => console.error(err))
 
 ```
