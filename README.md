@@ -1,5 +1,17 @@
-# whatsamenu-api-node
-A Node client for WhatsAMenu API (https://github.com/wiredmartian/whatsamenu-api-documentation)
+# Whatsamenu Node
+A Node.js client for [WhatsAMenu API](https://github.com/wiredmartian/whatsamenu-api-documentation)
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/7238091-c337fbed-43fc-4a66-870c-3cfbdc1167e2?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D7238091-c337fbed-43fc-4a66-870c-3cfbdc1167e2%26entityType%3Dcollection%26workspaceId%3Df7aedb7c-b2ff-43da-b219-270fbd08a6e3)
+
+### Getting Started
+
+Make sure your node environment is setup
+
+##### API Key
+
+This package assumes you already have an API Key. If you don't have one, please use the `/v1/auth` endpoints on the main API to create an account and generate a key.
+
+Use link: [Create API Key](https://github.com/wiredmartian/whatsamenu-api-documentation#generate-api-key)
 
 
 #### Status
