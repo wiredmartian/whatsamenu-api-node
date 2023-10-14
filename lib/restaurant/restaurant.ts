@@ -6,6 +6,7 @@ import {
     validator
 } from "../schema"
 import { MenuResult } from "../menu"
+import { FormData } from "formdata-node"
 
 /**
  * Restaurant API response type
@@ -177,13 +178,18 @@ export class Restaurant {
      * Gets a list of restaurant menus
      * @param id - restaurant or alias
      */
-    // TODO: support for alias
     async getMenus(id: string): Promise<MenuResult[]> {
         return this.client
             .get<MenuResult[]>(`/restaurants/${id}/menus`)
             .then((res) => res.data)
     }
 
+    /**
+     * Uploads a restaurant display image
+     * @param id - ingredient id
+     * @param image - Image file
+     * @returns upload file path/url
+     */
     async upload(id: number, image: Blob) {
         const form = new FormData()
         await validator.validateFormFile(image)

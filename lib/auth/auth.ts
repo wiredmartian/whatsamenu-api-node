@@ -10,6 +10,10 @@ import { ResponseMessage } from "../types"
 
 type User = CreateUserInput
 
+/**
+ * Not global exposed through the API bootstrap
+ * This simplifies the client and assumes every request will/must have an API Key header
+ */
 export class Auth {
     private client: AxiosInstance
 
