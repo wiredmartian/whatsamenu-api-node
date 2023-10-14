@@ -7,7 +7,7 @@ import {
     jest
 } from "@jest/globals"
 import axios from "axios"
-import { Allergen, AllergenResult } from "../../../lib/allergen"
+import { Allergen, AllergenResult } from "../../../src/allergen"
 jest.mock("axios")
 
 const axiosMock = jest.mocked(axios, { shallow: true })

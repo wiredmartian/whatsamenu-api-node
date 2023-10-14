@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test:
+  build_publish:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,7 +18,7 @@ jobs:
         registry-url: 'https://registry.npmjs.org'
 
     - name: install dependencies
-      run: yarn install
+      run: yarn install --frozen-lockfile
 
     - name: linting
       run: yarn lint
@@ -32,6 +32,32 @@ jobs:
     - name: build
       run: yarn build
 
+    - name: get-npm-version
+      id: package-version
+      uses: martinbeentjes/npm-get-version-action@main
+
+    - name: Extract release notes
+      id: extract-release-notes
+      uses: ffurrer2/extract-release-notes@v1
+
+    #### TAG RELEASE ####
+    - name: "Push tag v${{ steps.package-version.outputs.current-version }}"
+      uses: rickstaa/action-create-tag@v1
+      id: tag_version
+      with:
+        tag: "v${{ steps.package-version.outputs.current-version }}"
+
+    #### GITHUB RELEASE ####
+    - name: "Create a GitHub release v${{ steps.package-version.outputs.current-version }}"
+      uses: ncipollo/release-action@v1
+      with:
+        tag: "v${{ steps.package-version.outputs.current-version }}"
+        name: "Release v${{ steps.package-version.outputs.current-version }}"
+        body: |
+          ## Release notes:
+          ${{ steps.extract-release-notes.outputs.release_notes }}
+
+    #### NPM RELEASE ####
     - name: publish
       run: npm publish --access public
       env:
