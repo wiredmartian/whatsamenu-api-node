@@ -8,8 +8,8 @@ import {
 } from "@jest/globals"
 import axios from "axios"
 import fs from "fs"
-import { Ingredient } from "../../../lib/ingredient"
-import { CreateIngredientInput, validator } from "../../../lib/schema"
+import { Ingredient } from "../../../src/ingredient"
+import { CreateIngredientInput, validator } from "../../../src/schema"
 jest.mock("axios")
 
 const axiosMock = jest.mocked(axios, { shallow: true })

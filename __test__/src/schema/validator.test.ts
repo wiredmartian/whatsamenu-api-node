@@ -1,6 +1,6 @@
 import { describe, it, expect } from "@jest/globals"
 import fs from "fs"
-import { validator } from "../../../lib/schema"
+import { validator } from "../../../src/schema"
 
 describe("validateFormFile", () => {
     it("should resolve promise when the image is valid", async () => {
