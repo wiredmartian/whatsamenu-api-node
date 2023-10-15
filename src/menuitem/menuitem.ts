@@ -3,7 +3,7 @@ import { IngredientResult } from "../ingredient"
 import { DateMetadata, ResponseMessage } from "../types"
 import { CreateMenuItemInput, createMenuItemSchema, validator } from "../schema"
 import { AllergenResult } from "../allergen"
-import FD from "form-data"
+import { FormData } from "formdata-node"
 
 export type MenuItemResult = {
     /** menu item id */
@@ -118,13 +118,13 @@ export class MenuItem {
     /**
      * Uploads a menu item display image
      * @param id - menu item id
-     * @param buff - display image buffer
+     * @param image - display image blob
      * @returns an image path
      */
-    async uploadImage(id: number, buff: Buffer) {
-        const form = new FD()
-        form.append("fileData", buff, { filename: "file.png" })
-
+    async upload(id: number, image: Blob) {
+        const form = new FormData()
+        await validator.validateFormFile(image)
+        form.append("fileData", image)
         return this.client
             .putForm<{ data: string }>(`menu-item/${id}/upload`, form)
             .then((response) => response.data)
