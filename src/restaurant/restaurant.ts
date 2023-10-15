@@ -77,6 +77,18 @@ export class Restaurant {
     }
 
     /**
+     * Creates a restaurant alias
+     * @param id - restaurant id
+     * @param data - restaurant alias string
+     * @returns newly created alias
+     */
+    async createAlias(id: number, data: string): Promise<{ data: string }> {
+        return this.client
+            .post<{ data: string }>(`/restaurants/${id}/alias`, data)
+            .then((response) => response.data)
+    }
+
+    /**
      * Marks a restaurant and all it's dependents for deletion
      * @param id - restaurant id or alias
      */
@@ -99,10 +111,29 @@ export class Restaurant {
     /**
      * Gets a restaurant by Id
      * @param id - restaurant Id
+     * @returns restaurant data
      */
     async getRestaurant(id: number): Promise<RestaurantResult> {
         return this.client
             .get<RestaurantResult>(`/restaurants/${id}`)
+            .then((response) => response.data)
+    }
+
+    /**
+     * Gets a restaurant by alias
+     * @param alias - restaurant alias
+     * @returns resturant data
+     * @example const data = await restaurant.getRestaurantByAlias("dukkah")
+     */
+    async getRestaurantByAlias(alias: string): Promise<RestaurantResult> {
+        // match any special charaters excluding hyphen
+        if (/[^a-zA-Z-0-9-]/.test(alias)) {
+            throw new Error(
+                `alias must not contain special characters: ${alias}`
+            )
+        }
+        return this.client
+            .get<RestaurantResult>(`/restaurants/${alias.toLowerCase()}/alias`)
             .then((response) => response.data)
     }
 

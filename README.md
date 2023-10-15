@@ -34,11 +34,10 @@ $ yarn add @wiredmartians/whatsamenu-node
 
 ### Example
 
-This package will work for both ECMAScript (ESM) and CommonJS. You should be able to `import` and/or `require` it.
 
 ##### .env
 ``` .env
-API_KEY=WM.shdhd
+API_KEY = <your api key>
 API_BASE_URL=https://whatsamenu.core.wiredmartians.com/v1
 ```
 

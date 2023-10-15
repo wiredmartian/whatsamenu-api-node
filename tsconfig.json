@@ -1,15 +1,13 @@
 {
   "compilerOptions": {
-    /* Basic Options */
-    "target": "ES2022", 
-    "module": "NodeNext", 
+    "target": "ESNext",
+    "module": "CommonJS",
     "lib": ["ESNext"],
-    "moduleResolution": "NodeNext",
     "declaration": true,
     "outDir": "./dist",
-    "rootDir": "src", 
-    "strict": true, 
-    "esModuleInterop": true, 
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true
   },
