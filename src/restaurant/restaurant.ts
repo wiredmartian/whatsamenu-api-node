@@ -133,7 +133,7 @@ export class Restaurant {
             )
         }
         return this.client
-            .get<RestaurantResult>(`/restaurants/${alias}/alias`)
+            .get<RestaurantResult>(`/restaurants/${alias.toLowerCase()}/alias`)
             .then((response) => response.data)
     }
 

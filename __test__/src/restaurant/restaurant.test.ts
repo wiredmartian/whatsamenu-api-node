@@ -53,6 +53,59 @@ describe("Restaurant", () => {
         })
     })
 
+    describe("GET /restaurants/{alias}/alias", () => {
+        const alias = "Dukkah-Durban"
+        const endpoint = `/restaurants/${alias}/alias`
+
+        it.each([
+            [
+                "dukkah durban",
+                "alias must not contain special characters: dukkah durban"
+            ],
+            [
+                "Florida's kitchen",
+                "alias must not contain special characters: Florida's kitchen"
+            ],
+            [
+                "Boys & Boys",
+                "alias must not contain special characters: Boys & Boys"
+            ]
+        ])(
+            "should throw error when alias has special characters: %s",
+            async (input: string, expected: string) => {
+                let error: Error | null = null
+                try {
+                    await repository.getRestaurantByAlias(input)
+                } catch (err) {
+                    error = err as Error
+                }
+                expect(error).toBeTruthy()
+                expect(error?.message).toBe(expected)
+            }
+        )
+        it("should make a successful request", async () => {
+            jest.spyOn(axiosMock, "get").mockResolvedValue({
+                data
+            })
+            const actual = await repository.getRestaurantByAlias(alias)
+
+            expect(actual).toEqual(data)
+            expect(axiosMock.get).toHaveBeenCalledWith(endpoint.toLowerCase())
+        })
+
+        it("should throw error when request was rejected", async () => {
+            jest.spyOn(axiosMock, "get").mockImplementation(() => {
+                throw new Error("failed to complete request")
+            })
+            const [actual] = await Promise.allSettled([
+                repository.getRestaurantByAlias(alias)
+            ])
+            expect(axiosMock.get).toHaveBeenCalledWith(endpoint.toLowerCase())
+            expect(axios.get).toThrow("failed to complete request")
+            expect(actual.status).toBe("rejected")
+        })
+    })
+
     describe("GET /restaurants", () => {
         const endpoint = `/restaurants`
         it("should make a successful request", async () => {
