@@ -18,6 +18,7 @@ export class DefaultMenuHttpClient {
         if (!apiKey || !apiKey.toString().startsWith("WM.")) {
             throw new Error(`unexpected API Key token received: ${apiKey}`)
         }
+        this.isHttpUrl(clientConfig.baseURL)
         client.defaults.headers["X-API-Key"] = apiKey
         return this.attachDefaultErrorHandler(client)
     }
@@ -36,5 +37,20 @@ export class DefaultMenuHttpClient {
             }
         )
         return client
+    }
+
+    private static isHttpUrl(baseURL: string | undefined) {
+        if (!baseURL) {
+            throw new Error(
+                `cannot create an axios client with an undefined baseURL: ${baseURL}`
+            )
+        }
+        const newUrl = new URL(baseURL)
+        if (newUrl.protocol !== "http:" && newUrl.protocol !== "https:") {
+            throw new Error(
+                `unexpected url provided as baseURL for axios: ${baseURL}`
+            )
+        }
+        return newUrl
     }
 }
