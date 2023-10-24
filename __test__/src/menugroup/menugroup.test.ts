@@ -75,7 +75,7 @@ describe("MenuGroup", () => {
     })
 
     describe("PUT /menu-group/{id}", () => {
-        it("should create update menu group", async () => {
+        it("should update menu group", async () => {
             const input: CreateMenuGroupInput = {
                 name: "Sides",
                 summary: "All the sides you can eat"
@@ -95,7 +95,7 @@ describe("MenuGroup", () => {
     })
 
     describe("DELETE /menu-group/{id}", () => {
-        it("should delete an menu group", async () => {
+        it("should delete a menu group", async () => {
             const spy = jest.spyOn(axiosMock, "delete").mockResolvedValue({
                 data: { message: "menu group removed" }
             })
