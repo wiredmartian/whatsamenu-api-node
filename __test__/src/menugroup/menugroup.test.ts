@@ -9,12 +9,14 @@ import {
 import axios from "axios"
 import { MenuGroup } from "../../../src/menugroup"
 import { CreateMenuGroupInput, CreateMenuItemInput } from "../../../src/schema"
+import { _menugroup_test_data } from "../../__data__/_menugroup"
 jest.mock("axios")
 
 const axiosMock = jest.mocked(axios, { shallow: true })
 let menugroup: MenuGroup
 
 describe("MenuGroup", () => {
+    const menuGroupId = 19
     beforeEach(() => {
         menugroup = new MenuGroup(axiosMock)
     })
@@ -24,7 +26,6 @@ describe("MenuGroup", () => {
     })
 
     describe("POST /menu-group/{id}/menu-items", () => {
-        const menuGroupId = 19
         it("should create a menu item under menu group", async () => {
             const input: CreateMenuItemInput = {
                 name: "Burger",
@@ -74,7 +75,6 @@ describe("MenuGroup", () => {
     })
 
     describe("PUT /menu-group/{id}", () => {
-        const menuGroupId = 19
         it("should create update menu group", async () => {
             const input: CreateMenuGroupInput = {
                 name: "Sides",
@@ -92,33 +92,36 @@ describe("MenuGroup", () => {
             )
             spy.mockClear()
         })
+    })
 
-        it("should fail schema validation", async () => {
-            const input = {
-                summary: "Migty burger",
-                price: 150
-            }
-            const expected = [
-                {
-                    instancePath: "",
-                    keyword: "required",
-                    message: "must have required property 'name'",
-                    params: {
-                        missingProperty: "name"
-                    },
-                    schemaPath: "#/required"
-                }
-            ]
-            let error: Error | null = null
+    describe("DELETE /menu-group/{id}", () => {
+        it("should delete an menu group", async () => {
+            const spy = jest.spyOn(axiosMock, "delete").mockResolvedValue({
+                data: { message: "menu group removed" }
+            })
+            const actual = await menugroup.delete(menuGroupId)
 
-            try {
-                await menugroup.createMenuItem(menuGroupId, input as never)
-            } catch (err) {
-                error = err as Error
-            }
+            expect(actual).toEqual({ message: "menu group removed" })
+            expect(axiosMock.delete).toHaveBeenCalledWith(
+                `/menu-group/${menuGroupId}`
+            )
+            spy.mockClear()
+        })
+    })
 
-            expect(error).toEqual(expected)
-            expect(axiosMock.post).not.toHaveBeenCalled()
+    describe("GET /menu-group/{id}/menu-items", () => {
+        it("should return a list of menu items", async () => {
+            const expected = _menugroup_test_data.items
+            const spy = jest.spyOn(axiosMock, "get").mockResolvedValue({
+                data: _menugroup_test_data.items
+            })
+            const actual = await menugroup.getMenuItems(menuGroupId)
+
+            expect(actual).toEqual(expected)
+            expect(axiosMock.get).toHaveBeenCalledWith(
+                `/menu-group/${menuGroupId}/menu-items`
+            )
+            spy.mockClear()
         })
     })
 })
