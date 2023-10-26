@@ -34,7 +34,7 @@ export class MenuGroup {
      * @param menuGroupId - menu group id
      * @returns a response message
      */
-    async create(
+    async createMenuItem(
         menuGroupId: number,
         data: CreateMenuItemInput
     ): Promise<ResponseMessage> {

@@ -9,9 +9,7 @@ Make sure your node environment is setup
 
 ##### API Key
 
-This package assumes you already have an API Key. If you don't have one, please use the `/v1/auth` endpoints on the main API to create an account and generate a key.
-
-Use link: [Create API Key](https://github.com/wiredmartian/whatsamenu-api-documentation#generate-api-key)
+This package assumes you already have an API Key. If you don't have one, you can go to [wiredmartians.com](https://menu.wiredmartians.com/get-started) to create one or use http endpoint to create a key
 
 
 #### Status
