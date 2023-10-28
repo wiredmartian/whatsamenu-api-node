@@ -7,12 +7,13 @@ import {
     jest
 } from "@jest/globals"
 import axios from "axios"
+import fs from "fs"
 import {
     MenuItem,
     MenuItemAllergenResult,
     MenuItemResult
 } from "../../../src/menuitem"
-import { CreateMenuItemInput } from "../../../src/schema"
+import { CreateMenuItemInput, validator } from "../../../src/schema"
 jest.mock("axios")
 
 const axiosMock = jest.mocked(axios, { shallow: true })
@@ -20,6 +21,7 @@ let menuitem: MenuItem
 
 describe("MenuItem", () => {
     const menuItemId = 19
+    const allergenId = 32
     const menuitemData: MenuItemResult = {
         menuItemId: "7",
         menuId: "2",
@@ -137,6 +139,43 @@ describe("MenuItem", () => {
                 `/menu-item/${menuItemId}/allergens`
             )
             spy.mockClear()
+        })
+    })
+
+    describe("DELETE /menu-item/{id}/allergens", () => {
+        it("should delete menu item allergen", async () => {
+            const spy = jest.spyOn(axiosMock, "delete").mockResolvedValue({
+                data: { message: "menu item allergen removed" }
+            })
+            const actual = await menuitem.deleteAllergen(menuItemId, allergenId)
+
+            expect(actual).toEqual({ message: "menu item allergen removed" })
+            expect(axiosMock.delete).toHaveBeenCalledWith(
+                `/menu-item/${menuItemId}/allergens/${allergenId}`
+            )
+            spy.mockClear()
+        })
+    })
+
+    describe("PUT /menu-item/{id}/upload", () => {
+        const imagePath = "__test__/__assets__/kota.jpeg"
+        const buffer = fs.readFileSync(imagePath)
+        it("should successfully upload menu item image", async () => {
+            jest.spyOn(validator, "validateFormFile").mockResolvedValue()
+            jest.spyOn(axiosMock, "putForm").mockResolvedValue({
+                data: {
+                    data: "public/menuitem/34-b2a7f1c6be9edf1ac591c123b6ed2f90.jpg"
+                }
+            })
+
+            const actual = await menuitem.upload(
+                34,
+                new Blob([buffer], { type: "image/jpeg" })
+            )
+
+            expect(actual).toEqual({
+                data: "public/menuitem/34-b2a7f1c6be9edf1ac591c123b6ed2f90.jpg"
+            })
         })
     })
 })
