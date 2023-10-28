@@ -1,6 +1,6 @@
 {
   "name": "@wiredmartians/whatsamenu-node",
-  "version": "0.0.1-beta-1",
+  "version": "0.0.1",
   "description": "Whatsamenu Nodejs API Client",
   "main": "dist/index.js",
   "exports": "./dist/index.js",
@@ -21,7 +21,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "test": "jest",
+    "test": "jest --runInBand",
     "pretty": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix",

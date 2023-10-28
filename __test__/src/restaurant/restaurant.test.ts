@@ -7,9 +7,10 @@ import {
     jest
 } from "@jest/globals"
 import axios from "axios"
+import fs from "fs"
 import { _restaurant_test_data } from "../../__data__/_restaurant"
 import { Restaurant } from "../../../src/restaurant"
-import { CreateRestaurantInput } from "../../../src/schema"
+import { CreateRestaurantInput, validator } from "../../../src/schema"
 import { Province, ResponseMessage } from "../../../src/types"
 jest.mock("axios")
 
@@ -315,6 +316,84 @@ describe("Restaurant", () => {
 
             expect(actual).toEqual([data])
             expect(axiosMock.post).toHaveBeenCalledWith(endpoint, input)
+        })
+    })
+
+    describe("GET restaurants/{id}/qrcode", () => {
+        it("should successfully retrieve a base64 QR code image", async () => {
+            const restaurantId = 5
+            const qrEndpoint = `restaurants/${restaurantId}/qrcode`
+            const expected = {
+                imageUri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA..."
+            }
+
+            const mockSpy = jest.spyOn(axiosMock, "get").mockResolvedValue({
+                data: {
+                    imageUri:
+                        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA..."
+                }
+            })
+            const actual = await repository.getQRCode(restaurantId)
+
+            expect(actual).toEqual(expected)
+            expect(axiosMock.get).toHaveBeenCalledWith(qrEndpoint)
+            mockSpy.mockClear()
+        })
+    })
+
+    describe("POST /restaurants/near-me", () => {
+        it("should return search results", async () => {
+            const query = "dukkah"
+            const limit = 11
+            const endpoint = `/restaurants/search?query=${query}&limit=${limit}`
+
+            const spy = jest.spyOn(axiosMock, "get").mockResolvedValue({
+                data: [data]
+            })
+
+            const actual = await repository.search(query, limit)
+
+            expect(actual).toEqual([data])
+            expect(axiosMock.get).toHaveBeenCalledWith(endpoint)
+            spy.mockClear()
+        })
+
+        it("should return any empty data set when no results were found", async () => {
+            const query = "some restaurant"
+            const limit = 5
+            const endpoint = `/restaurants/search?query=${query}&limit=${limit}`
+
+            const spy = jest.spyOn(axiosMock, "get").mockResolvedValue({
+                data: []
+            })
+
+            const actual = await repository.search(query, limit)
+
+            expect(actual).toEqual([])
+            expect(axiosMock.get).toHaveBeenCalledWith(endpoint)
+            spy.mockClear()
+        })
+    })
+
+    describe("PUT /restaurants/{id}/upload", () => {
+        const imagePath = "__test__/__assets__/kota.jpeg"
+        const buffer = fs.readFileSync(imagePath)
+        it("should successfully upload restaurant image", async () => {
+            jest.spyOn(validator, "validateFormFile").mockResolvedValue()
+            jest.spyOn(axiosMock, "putForm").mockResolvedValue({
+                data: {
+                    data: "public/restaurant/14-b2a7f1c6be9edf1ac591c123b6ed2f90.jpg"
+                }
+            })
+
+            const actual = await repository.upload(
+                14,
+                new Blob([buffer], { type: "image/jpeg" })
+            )
+
+            expect(actual).toEqual({
+                data: "public/restaurant/14-b2a7f1c6be9edf1ac591c123b6ed2f90.jpg"
+            })
         })
     })
 })

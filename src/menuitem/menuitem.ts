@@ -2,7 +2,6 @@ import { AxiosInstance } from "axios"
 import { IngredientResult } from "../ingredient"
 import { DateMetadata, ResponseMessage } from "../types"
 import { CreateMenuItemInput, createMenuItemSchema, validator } from "../schema"
-import { AllergenResult } from "../allergen"
 import { FormData } from "formdata-node"
 
 export type MenuItemResult = {
@@ -25,6 +24,28 @@ export type MenuItemResult = {
     /** ingredients used to make the item */
     ingredients: Array<IngredientResult> | null
 } & DateMetadata
+
+/**
+ * An association between an allergen and menu item
+ */
+export type MenuItemAllergenResult = {
+    /**
+     * allergen id
+     */
+    allergenId: string
+    /**
+     * menu item id
+     */
+    menuItemId: string
+    /**
+     * allergen name
+     */
+    name: string
+    /**
+     * allergen short description
+     */
+    summary: string
+} & Partial<DateMetadata>
 
 export class MenuItem {
     private client: AxiosInstance
@@ -95,9 +116,9 @@ export class MenuItem {
      * @param id - menu item id
      * @returns a list of allergens
      */
-    async getAllergens(id: number): Promise<AllergenResult[]> {
+    async getAllergens(id: number): Promise<MenuItemAllergenResult[]> {
         return this.client
-            .get<AllergenResult[]>(`/menu-item/${id}/allergens`)
+            .get<MenuItemAllergenResult[]>(`/menu-item/${id}/allergens`)
             .then((response) => response.data)
     }
 
