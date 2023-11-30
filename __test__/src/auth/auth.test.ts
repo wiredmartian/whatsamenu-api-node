@@ -57,7 +57,7 @@ describe("Auth", () => {
             }
             const expected: ResponseMessage = { message: "user created" }
 
-            jest.spyOn(axiosMock, "post").mockResolvedValue({
+            const spy = jest.spyOn(axiosMock, "post").mockResolvedValue({
                 data: { message: "user created" }
             })
 
@@ -65,6 +65,7 @@ describe("Auth", () => {
 
             expect(actual).toEqual(expected)
             expect(axiosMock.post).toHaveBeenCalledWith("/auth/sign-up", input)
+            spy.mockClear()
         })
     })
 
@@ -74,7 +75,7 @@ describe("Auth", () => {
                 email: "hib@bob.com",
                 password: "@Password01"
             }
-            jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
+            const spy = jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
                 data: { token: "ey..." }
             })
 
@@ -82,12 +83,13 @@ describe("Auth", () => {
 
             expect(actual).toEqual({ token: "ey..." })
             expect(axiosMock.post).toHaveBeenCalledWith("/auth/sign-in", input)
+            spy.mockClear()
         })
     })
 
     describe("POST /auth/api-key", () => {
         it("should successfully generate an api key", async () => {
-            jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
+            const spy = jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
                 data: { apiKey: "WM.ahxnoqwue28" }
             })
 
@@ -95,6 +97,7 @@ describe("Auth", () => {
 
             expect(actual).toEqual({ apiKey: "WM.ahxnoqwue28" })
             expect(axiosMock.post).toHaveBeenCalledWith("/auth/api-key")
+            spy.mockClear()
         })
     })
 
@@ -104,7 +107,7 @@ describe("Auth", () => {
             const expected: ResponseMessage = {
                 message: "A One Time Pin has been sent to your email"
             }
-            jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
+            const spy = jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
                 data: { message: "A One Time Pin has been sent to your email" }
             })
 
@@ -115,6 +118,7 @@ describe("Auth", () => {
                 "/auth/forgot-password",
                 input
             )
+            spy.mockClear()
         })
     })
 
@@ -128,7 +132,7 @@ describe("Auth", () => {
             const expected: ResponseMessage = {
                 message: "Password reset successful"
             }
-            jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
+            const spy = jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
                 data: { message: "Password reset successful" }
             })
 
@@ -139,6 +143,7 @@ describe("Auth", () => {
                 "/auth/reset-password",
                 input
             )
+            spy.mockClear()
         })
 
         it("should not make request when input fails schema validation", async () => {
