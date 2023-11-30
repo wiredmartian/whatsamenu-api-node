@@ -341,6 +341,53 @@ describe("Restaurant", () => {
         })
     })
 
+    describe("GET /restaurants/{id}/menus", () => {
+        it("should successfully retrieve a list of menus", async () => {
+            const restaurantId = "5"
+            const endpoint = `/restaurants/${restaurantId}/menus`
+            const expected = [data]
+
+            const mockSpy = jest.spyOn(axiosMock, "get").mockResolvedValue({
+                data: [data]
+            })
+            const actual = await repository.getMenus(restaurantId)
+
+            expect(actual).toEqual(expected)
+            expect(axiosMock.get).toHaveBeenCalledWith(endpoint)
+            mockSpy.mockClear()
+        })
+
+        it("should return an empty array when no menus were found", async () => {
+            const restaurantId = "5"
+            const endpoint = `/restaurants/${restaurantId}/menus`
+
+            const mockSpy = jest.spyOn(axiosMock, "get").mockResolvedValue({
+                data: []
+            })
+            const actual = await repository.getMenus(restaurantId)
+
+            expect(actual).toEqual([])
+            expect(axiosMock.get).toHaveBeenCalledWith(endpoint)
+            mockSpy.mockClear()
+        })
+    })
+
+    describe("GET /restaurants/owner", () => {
+        it("should successfully retrieve a list of restaurants", async () => {
+            const endpoint = "/restaurants/owner"
+            const expected = [data]
+
+            const mockSpy = jest.spyOn(axiosMock, "get").mockResolvedValue({
+                data: [data]
+            })
+            const actual = await repository.getByOwner()
+
+            expect(actual).toEqual(expected)
+            expect(axiosMock.get).toHaveBeenCalledWith(endpoint)
+            mockSpy.mockClear()
+        })
+    })
+
     describe("POST /restaurants/near-me", () => {
         it("should return search results", async () => {
             const query = "dukkah"
@@ -371,6 +418,49 @@ describe("Restaurant", () => {
 
             expect(actual).toEqual([])
             expect(axiosMock.get).toHaveBeenCalledWith(endpoint)
+            spy.mockClear()
+        })
+    })
+
+    describe("DELETE /restaurants/{id}", () => {
+        it("should delete a restaurant", async () => {
+            const restaurantId = "5"
+            const endpoint = `/restaurants/${restaurantId}`
+
+            const spy = jest.spyOn(axiosMock, "delete").mockResolvedValue({
+                data: {
+                    message: "restaurant deleted"
+                }
+            })
+
+            const actual = await repository.delete(restaurantId)
+
+            expect(actual).toEqual({
+                message: "restaurant deleted"
+            })
+            expect(axiosMock.delete).toHaveBeenCalledWith(endpoint)
+            spy.mockClear()
+        })
+    })
+
+    describe("POST /restaurants/{id}/alias", () => {
+        it("should create and return a restaurant alias id", async () => {
+            const restaurantId = 5
+            const alias = "Dukkah Morningside"
+            const endpoint = `/restaurants/${restaurantId}/alias`
+
+            const spy = jest.spyOn(axiosMock, "post").mockResolvedValue({
+                data: {
+                    message: "dukkah-morningside"
+                }
+            })
+
+            const actual = await repository.createAlias(restaurantId, alias)
+
+            expect(actual).toEqual({
+                message: "dukkah-morningside"
+            })
+            expect(axiosMock.post).toHaveBeenCalledWith(endpoint, alias)
             spy.mockClear()
         })
     })
