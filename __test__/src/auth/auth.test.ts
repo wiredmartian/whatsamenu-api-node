@@ -8,7 +8,7 @@ import {
 } from "@jest/globals"
 import axios from "axios"
 import { Auth } from "../../../src/auth"
-import { CreateUserInput } from "../../../src/schema"
+import { CreateUserInput, ResetPasswordInput } from "../../../src/schema"
 import { ResponseMessage } from "../../../src/types"
 jest.mock("axios")
 
@@ -115,6 +115,56 @@ describe("Auth", () => {
                 "/auth/forgot-password",
                 input
             )
+        })
+    })
+
+    describe("POST /auth/reset-password", () => {
+        it("should successfully reset password", async () => {
+            const input: ResetPasswordInput = {
+                password: "@Password01",
+                email: "johndoe@example.com",
+                otp: "123456"
+            }
+            const expected: ResponseMessage = {
+                message: "Password reset successful"
+            }
+            jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
+                data: { message: "Password reset successful" }
+            })
+
+            const actual = await user.resetPassword(input)
+
+            expect(actual).toEqual(expected)
+            expect(axiosMock.post).toHaveBeenCalledWith(
+                "/auth/reset-password",
+                input
+            )
+        })
+
+        it("should not make request when input fails schema validation", async () => {
+            const expected = [
+                {
+                    instancePath: "/otp",
+                    schemaPath: "#/properties/otp/minLength",
+                    keyword: "minLength",
+                    params: { limit: 6 },
+                    message: "must NOT have fewer than 6 characters"
+                }
+            ]
+
+            let error
+            try {
+                await user.resetPassword({
+                    email: "johndoe@exmaple.com",
+                    password: "@Password01",
+                    otp: "612"
+                })
+            } catch (err) {
+                error = err as unknown
+            }
+
+            expect(error).toEqual(expected)
+            expect(axiosMock.post).not.toHaveBeenCalled()
         })
     })
 })
