@@ -8,7 +8,7 @@ import {
 } from "@jest/globals"
 import axios from "axios"
 import { Auth } from "../../../src/auth"
-import { CreateUserInput } from "../../../src/schema"
+import { CreateUserInput, ResetPasswordInput } from "../../../src/schema"
 import { ResponseMessage } from "../../../src/types"
 jest.mock("axios")
 
@@ -57,7 +57,7 @@ describe("Auth", () => {
             }
             const expected: ResponseMessage = { message: "user created" }
 
-            jest.spyOn(axiosMock, "post").mockResolvedValue({
+            const spy = jest.spyOn(axiosMock, "post").mockResolvedValue({
                 data: { message: "user created" }
             })
 
@@ -65,6 +65,7 @@ describe("Auth", () => {
 
             expect(actual).toEqual(expected)
             expect(axiosMock.post).toHaveBeenCalledWith("/auth/sign-up", input)
+            spy.mockClear()
         })
     })
 
@@ -74,7 +75,7 @@ describe("Auth", () => {
                 email: "hib@bob.com",
                 password: "@Password01"
             }
-            jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
+            const spy = jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
                 data: { token: "ey..." }
             })
 
@@ -82,12 +83,13 @@ describe("Auth", () => {
 
             expect(actual).toEqual({ token: "ey..." })
             expect(axiosMock.post).toHaveBeenCalledWith("/auth/sign-in", input)
+            spy.mockClear()
         })
     })
 
     describe("POST /auth/api-key", () => {
         it("should successfully generate an api key", async () => {
-            jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
+            const spy = jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
                 data: { apiKey: "WM.ahxnoqwue28" }
             })
 
@@ -95,6 +97,7 @@ describe("Auth", () => {
 
             expect(actual).toEqual({ apiKey: "WM.ahxnoqwue28" })
             expect(axiosMock.post).toHaveBeenCalledWith("/auth/api-key")
+            spy.mockClear()
         })
     })
 
@@ -104,7 +107,7 @@ describe("Auth", () => {
             const expected: ResponseMessage = {
                 message: "A One Time Pin has been sent to your email"
             }
-            jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
+            const spy = jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
                 data: { message: "A One Time Pin has been sent to your email" }
             })
 
@@ -115,6 +118,58 @@ describe("Auth", () => {
                 "/auth/forgot-password",
                 input
             )
+            spy.mockClear()
+        })
+    })
+
+    describe("POST /auth/reset-password", () => {
+        it("should successfully reset password", async () => {
+            const input: ResetPasswordInput = {
+                password: "@Password01",
+                email: "johndoe@example.com",
+                otp: "123456"
+            }
+            const expected: ResponseMessage = {
+                message: "Password reset successful"
+            }
+            const spy = jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
+                data: { message: "Password reset successful" }
+            })
+
+            const actual = await user.resetPassword(input)
+
+            expect(actual).toEqual(expected)
+            expect(axiosMock.post).toHaveBeenCalledWith(
+                "/auth/reset-password",
+                input
+            )
+            spy.mockClear()
+        })
+
+        it("should not make request when input fails schema validation", async () => {
+            const expected = [
+                {
+                    instancePath: "/otp",
+                    schemaPath: "#/properties/otp/minLength",
+                    keyword: "minLength",
+                    params: { limit: 6 },
+                    message: "must NOT have fewer than 6 characters"
+                }
+            ]
+
+            let error
+            try {
+                await user.resetPassword({
+                    email: "johndoe@exmaple.com",
+                    password: "@Password01",
+                    otp: "612"
+                })
+            } catch (err) {
+                error = err as unknown
+            }
+
+            expect(error).toEqual(expected)
+            expect(axiosMock.post).not.toHaveBeenCalled()
         })
     })
 })
