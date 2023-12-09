@@ -201,7 +201,7 @@ export class Restaurant {
      */
     async getByOwner(): Promise<RestaurantResult[]> {
         return this.client
-            .get<RestaurantResult[]>("restaurants/owner")
+            .get<RestaurantResult[]>("/restaurants/owner")
             .then((response) => response.data)
     }
 
