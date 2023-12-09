@@ -8,7 +8,7 @@ import {
 } from "@jest/globals"
 import axios from "axios"
 import { ApiKey, Auth } from "../../../src/auth"
-import { CreateUserInput, ResetPasswordInput } from "../../../src/schema"
+import { ResetPasswordInput } from "../../../src/schema"
 import { ResponseMessage } from "../../../src/types"
 jest.mock("axios")
 
@@ -24,66 +24,66 @@ describe("Auth", () => {
         axiosMock.mockReset()
     })
 
-    describe("POST /auth/sign-up", () => {
-        it("should not make request when input fails schema validation", async () => {
-            const expected = [
-                {
-                    instancePath: "/password",
-                    schemaPath: "#/properties/password/minLength",
-                    keyword: "minLength",
-                    params: { limit: 8 },
-                    message: "must NOT have fewer than 8 characters"
-                }
-            ]
+    // describe("POST /auth/sign-up", () => {
+    //     it("should not make request when input fails schema validation", async () => {
+    //         const expected = [
+    //             {
+    //                 instancePath: "/password",
+    //                 schemaPath: "#/properties/password/minLength",
+    //                 keyword: "minLength",
+    //                 params: { limit: 8 },
+    //                 message: "must NOT have fewer than 8 characters"
+    //             }
+    //         ]
 
-            let error
-            try {
-                await user.signUp({
-                    email: "hib@bob.com",
-                    password: ""
-                })
-            } catch (err) {
-                error = err as unknown
-            }
+    //         let error
+    //         try {
+    //             await user.signUp({
+    //                 email: "hib@bob.com",
+    //                 password: ""
+    //             })
+    //         } catch (err) {
+    //             error = err as unknown
+    //         }
 
-            expect(error).toEqual(expected)
-            expect(axiosMock.post).not.toHaveBeenCalled()
-        })
+    //         expect(error).toEqual(expected)
+    //         expect(axiosMock.post).not.toHaveBeenCalled()
+    //     })
 
-        it("should sign up successfully", async () => {
-            const input: CreateUserInput = {
-                email: "hib@bob.com",
-                password: "@Password01"
-            }
-            const expected: ResponseMessage = { message: "user created" }
+    //     it("should sign up successfully", async () => {
+    //         const input: CreateUserInput = {
+    //             email: "hib@bob.com",
+    //             password: "@Password01"
+    //         }
+    //         const expected: ResponseMessage = { message: "user created" }
 
-            jest.spyOn(axiosMock, "post").mockResolvedValue({
-                data: { message: "user created" }
-            })
+    //         jest.spyOn(axiosMock, "post").mockResolvedValue({
+    //             data: { message: "user created" }
+    //         })
 
-            const actual = await user.signUp(input)
+    //         const actual = await user.signUp(input)
 
-            expect(actual).toEqual(expected)
-            expect(axiosMock.post).toHaveBeenCalledWith("/auth/sign-up", input)
-        })
-    })
+    //         expect(actual).toEqual(expected)
+    //         expect(axiosMock.post).toHaveBeenCalledWith("/auth/sign-up", input)
+    //     })
+    // })
 
-    describe("POST /auth/sign-in", () => {
-        it("should successfully log user in", async () => {
-            const input: CreateUserInput = {
-                email: "hib@bob.com",
-                password: "@Password01"
-            }
-            jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
-                data: { token: "ey..." }
-            })
+    // describe("POST /auth/sign-in", () => {
+    //     it("should successfully log user in", async () => {
+    //         const input: CreateUserInput = {
+    //             email: "hib@bob.com",
+    //             password: "@Password01"
+    //         }
+    //         jest.spyOn(axiosMock, "post").mockResolvedValueOnce({
+    //             data: { token: "ey..." }
+    //         })
 
-            const actual = await user.signIn(input)
+    //         const actual = await user.signIn(input)
 
-            expect(actual).toEqual({ token: "ey..." })
-            expect(axiosMock.post).toHaveBeenCalledWith("/auth/sign-in", input)
-        })
-    })
+    //         expect(actual).toEqual({ token: "ey..." })
+    //         expect(axiosMock.post).toHaveBeenCalledWith("/auth/sign-in", input)
+    //     })
+    // })
 
     describe("Manage API keys", () => {
         describe("GET /auth/api-keys", () => {

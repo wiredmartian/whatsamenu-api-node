@@ -41,7 +41,7 @@ export class Auth {
      * @param data - create user data model
      * @returns data attribute with message
      */
-    async signUp(data: User): Promise<ResponseMessage> {
+    private signUp(data: User): Promise<ResponseMessage> {
         return validator
             .validateJsonSchema(createUserSchema, data)
             .then(() =>
@@ -56,7 +56,7 @@ export class Auth {
      * @param data - login credentials
      * @returns a jwt authentication token
      */
-    async signIn(data: User): Promise<{ token: string }> {
+    private signIn(data: User): Promise<{ token: string }> {
         return this.client
             .post<{ token: string }>("/auth/sign-in", data)
             .then((response) => response.data)
