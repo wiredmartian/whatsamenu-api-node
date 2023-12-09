@@ -24,6 +24,52 @@ const formFileValid = (file: Blob) => {
     return Promise.resolve()
 }
 
+/**
+ * Ensures password meets the following criteria:
+ * - At least 8 characters long
+ * - Contains at least one uppercase letter
+ * - Contains at least one lowercase letter
+ * - Contains at least one number
+ * - Contains at least one special character
+ * @param password - password to validate
+ */
+const validatePassword = (password: string) => {
+    if (password.length < 8) {
+        return Promise.reject(new Error("must be at least 8 characters long"))
+    }
+    const hasUpperCase = /[A-Z]/.test(password)
+    const hasLowerCase = /[a-z]/.test(password)
+    const hasNumber = /[0-9]/.test(password)
+    const hasSpecialChar = /[-+_!@#$%^&*.,?]/.test(password)
+    // const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password)
+
+    if (!hasUpperCase) {
+        return Promise.reject(
+            new Error("must contain at least 1 uppercase letter")
+        )
+    }
+
+    if (!hasLowerCase) {
+        return Promise.reject(
+            new Error("must contain at least 1 lowercase letter")
+        )
+    }
+
+    if (!hasNumber) {
+        return Promise.reject(new Error("must contain at least 1 number"))
+    }
+
+    if (!hasSpecialChar) {
+        return Promise.reject(
+            new Error(
+                "must contain at least 1 special character: `-+_!@#$%^&*.,?`"
+            )
+        )
+    }
+
+    return Promise.resolve()
+}
+
 export const validator = {
     /**
      * validates a Json schema and returns a rejected promise if invalid
@@ -32,5 +78,7 @@ export const validator = {
     /**
      * Validates file contents returns rejected promised if it fails some rules
      */
-    validateFormFile: formFileValid
+    validateFormFile: formFileValid,
+
+    validatePassword: validatePassword
 }
