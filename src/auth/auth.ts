@@ -70,7 +70,7 @@ export class Auth {
         name?: string
     }): Promise<{ apiKey: string }> {
         return this.client
-            .post<{ apiKey: string }>("/auth/api-key", { name: params.name })
+            .post<{ apiKey: string }>("/auth/api-keys", { name: params.name })
             .then((response) => response.data)
     }
 
@@ -107,6 +107,17 @@ export class Auth {
     ): Promise<ApiKey> {
         return this.client
             .patch<ApiKey>(`/auth/api-keys/${alias}`, params)
+            .then((response) => response.data)
+    }
+
+    /**
+     * Delete API key by alias
+     * @param alias - the API key alias
+     * @returns a message
+     */
+    async deleteApiKey(alias: string): Promise<ResponseMessage> {
+        return this.client
+            .delete<ResponseMessage>(`/auth/api-keys/${alias}`)
             .then((response) => response.data)
     }
 

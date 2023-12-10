@@ -180,6 +180,60 @@ describe("Auth", () => {
                 )
             })
         })
+
+        describe("DELETE /auth/api-keys/{alias}", () => {
+            it("should successfully delete api key", async () => {
+                const expected: ResponseMessage = {
+                    message: "API key deleted successfully"
+                }
+
+                const spy = jest
+                    .spyOn(axiosMock, "delete")
+                    .mockResolvedValueOnce({
+                        data: expected
+                    })
+
+                const actual = await user.deleteApiKey(
+                    "df6088dc-be04-4c9f-95d4-cf3ee0cbac63"
+                )
+
+                expect(actual).toEqual(expected)
+                expect(axiosMock.delete).toHaveBeenCalledWith(
+                    "/auth/api-keys/df6088dc-be04-4c9f-95d4-cf3ee0cbac63"
+                )
+                spy.mockClear()
+            })
+
+            it("should return 404 when api key not found", async () => {
+                const expected = {
+                    response: {
+                        status: 404,
+                        data: {
+                            error: "API key not found"
+                        }
+                    }
+                }
+
+                const spy = jest
+                    .spyOn(axiosMock, "delete")
+                    .mockRejectedValueOnce(expected)
+
+                let error
+                try {
+                    await user.deleteApiKey(
+                        "df6088dc-be04-4c9f-95d4-cf3ee0cbac63"
+                    )
+                } catch (err) {
+                    error = err as unknown
+                }
+
+                expect(error).toEqual(expected)
+                expect(axiosMock.delete).toHaveBeenCalledWith(
+                    "/auth/api-keys/df6088dc-be04-4c9f-95d4-cf3ee0cbac63"
+                )
+                spy.mockClear()
+            })
+        })
     })
     describe("POST /auth/forgot-password", () => {
         it("should successfully send a forgot password request", async () => {

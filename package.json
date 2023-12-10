@@ -1,6 +1,6 @@
 {
   "name": "@wiredmartians/whatsamenu-node",
-  "version": "0.0.3-rc",
+  "version": "0.0.3-rc-1",
   "description": "Whatsamenu Nodejs API Client",
   "main": "dist/index.js",
   "exports": "./dist/index.js",
