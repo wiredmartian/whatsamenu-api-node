@@ -46,8 +46,7 @@ export const resetPasswordSchema: JSONSchemaType<ResetPasswordInput> = {
             minLength: 6
         },
         password: {
-            type: "string",
-            minLength: 8
+            type: "string"
         },
         otp: {
             type: "string",

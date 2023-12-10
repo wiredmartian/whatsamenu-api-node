@@ -1,6 +1,6 @@
 {
   "name": "@wiredmartians/whatsamenu-node",
-  "version": "0.0.2",
+  "version": "0.0.3-rc",
   "description": "Whatsamenu Nodejs API Client",
   "main": "dist/index.js",
   "exports": "./dist/index.js",
@@ -14,9 +14,8 @@
   "keywords": [
     "node",
     "food api",
-    "whatsamenu",
-    "restaurants",
-    "menu api"
+    "menu api",
+    "restaurant api"
   ],
   "license": "MIT",
   "scripts": {

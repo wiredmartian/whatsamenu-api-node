@@ -5,6 +5,7 @@ import { Allergen } from "./allergen"
 import { Ingredient } from "./ingredient"
 import { MenuItem } from "./menuitem"
 import { MenuGroup } from "./menugroup"
+import { Auth } from "./auth"
 
 export class MenuAPI {
     private http: AxiosInstance
@@ -13,6 +14,7 @@ export class MenuAPI {
     }
     get menuApi() {
         return {
+            auth: new Auth(this.http),
             restaurant: new Restaurant(this.http),
             menu: new Menu(this.http),
             allergen: new Allergen(this.http),
